@@ -1,0 +1,19 @@
+---
+# Variables for use with knopki.sudoers role and dld_add_users.yml file.
+sudoers_filename: "dld"
+sudoers:
+
+  - name: bcoles
+    users:
+      - "ALL"
+    github_keys: https://github.com/betsycoles.keys
+
+  - name: rsdoiel
+    users:
+      - "ALL"
+    github_keys: https://github.com/rsdoiel.keys
+
+  - name: tkeswick
+    users:
+      - "ALL"
+    github_keys: https://github.com/t4k.keys

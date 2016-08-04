@@ -1,0 +1,36 @@
+---
+# This playbook can be run with `ansible-playbook playbook.yml` because of the
+# configuration options stored in `ansible.cfg`.
+
+- name: Create instance.
+  hosts: localhost
+  gather_facts: false
+  vars:
+    key_name: caltechlibrary_ec2_key_pair
+    instance_type: t2.micro
+    security_groups: ['appsrv1', 'WebServerSG']
+    image: ami-d732f0b7 # Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
+    region: us-west-2
+    instance_name: LAMP # The name of this server in EC2.
+  tasks:
+    - include: ec2_launch.yml
+
+- name: Configure instance.
+  hosts: launched # Targets only the just-launched instance created above.
+  remote_user: ubuntu # Ubuntu AMIs have an `ubuntu` user initially.
+  gather_facts: true
+  # These must be installed via `ansible-galaxy` prior to running the playbook.
+  roles:
+    - knopki.sudoers
+    - geerlingguy.mysql
+    - geerlingguy.apache
+    - geerlingguy.php
+    - geerlingguy.php-mysql
+    - geerlingguy.git
+  sudo: yes
+  vars_files:
+    - dld_sudoers.yml
+    # Include other vars_files here.
+  tasks:
+    - include: dld_add_users.yml
+    # Include other tasks files here.

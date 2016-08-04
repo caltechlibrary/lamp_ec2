@@ -1,0 +1,10 @@
+---
+# Tasks which depend on dld_sudoers.yml file for variables.
+
+- name: Add user accounts.
+  user: name={{ item.name }} shell=/bin/bash state=present
+  with_items: "{{ sudoers }}"
+
+- name: Add authorized_keys files.
+  authorized_key: user={{ item.name }} key={{ item.github_keys }}
+  with_items: "{{ sudoers }}"
